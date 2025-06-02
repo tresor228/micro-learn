@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des Micro-Cours - Ablaze Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #667eea, #764ba2, #6c2eb9, #9c27b0);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      animation: fadeInLeft 1s ease;
+    }
+
+    header.scrolled {
+      background: rgba(108, 46, 185, 0.95);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    header h1:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-icon {
+      margin-right: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 15px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    nav a:hover::before {
+      left: 100%;
+    }
+
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    /* Bouton de retour */
+    .back-btn {
+      position: fixed;
+      top: 120px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #6c2eb9;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      animation: fadeInLeft 1s ease 0.5s both;
+    }
+
+    .back-btn:hover {
+      background: white;
+      transform: translateX(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .back-btn i {
+      margin-right: 8px;
+    }
+
+    /* Section principale */
+    .main-section {
+      padding: 140px 20px 60px;
+      position: relative;
+    }
+
+    /* Particules de fond */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: floatParticle 15s infinite linear;
+    }
+
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    /* Titre principal */
+    .page-title {
+      text-align: center;
+      color: white;
+      margin-bottom: 50px;
+      font-size: 3rem;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: fadeInUp 1.2s ease;
+      position: relative;
+    }
+
+    .page-title::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(45deg, #fca311, #ff6b35);
+      border-radius: 2px;
+    }
+
+    .page-title i {
+      margin-right: 15px;
+      color: #fca311;
+      animation: pulse 2s infinite;
+    }
+
+    /* Stats et filtres */
+    .stats-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 15px 25px;
+      border-radius: 20px;
+      color: white;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-item i {
+      margin-right: 8px;
+      color: #fca311;
+    }
+
+    /* Loading animation */
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 300px;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Container des cours */
+    .cours-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease 0.6s both;
+    }
+
+    /* Cards des cours */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .card.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #fca311, transparent);
+      transition: left 0.5s;
+    }
+
+    .card:hover::before {
+      left: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(108, 46, 185, 0.2);
+    }
+
+    /* Image du cours */
+    .cours-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .card:hover .cours-img {
+      transform: scale(1.05);
+    }
+
+    /* Contenu de la card */
+    .card-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card h3 {
+      color: #6c2eb9;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      line-height: 1.3;
+    }
+
+    .card-info {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .card-info i {
+      color: #fca311;
+      margin-right: 10px;
+      margin-top: 2px;
+      min-width: 16px;
+    }
+
+    .card-info strong {
+      color: #6c2eb9;
+      margin-right: 5px;
+    }
+
+    /* Badge de niveau */
+    .niveau-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .niveau-debutant {
+      background: linear-gradient(45deg, #4caf50, #8bc34a);
+    }
+
+    .niveau-intermediaire {
+      background: linear-gradient(45deg, #ff9800, #ffc107);
+    }
+
+    .niveau-avance {
+      background: linear-gradient(45deg, #f44336, #e91e63);
+    }
+
+    /* Bouton d'inscription */
+    .btn-inscription {
+      margin-top: auto;
+      background: linear-gradient(45deg, #6c2eb9, #9c27b0);
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-inscription::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-inscription:hover::before {
+      left: 100%;
+    }
+
+    .btn-inscription:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(108, 46, 185, 0.4);
+    }
+
+    .btn-inscription i {
+      margin-right: 8px;
+    }
+
+    /* Message d'état vide */
+    .empty-state {
+      text-align: center;
+      color: white;
+      padding: 60px 20px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2.2rem;
+      }
+
+      .cours-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 10px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .stats-section {
+        gap: 20px;
+      }
+
+      .stat-item {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .back-btn {
+        top: 80px;
+        left: 10px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-section {
+        padding: 120px 15px 40px;
+      }
+
+      .page-title {
+        font-size: 1.8rem;
+      }
+
+      .cours-container {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .cours-img {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <h1>
+      <i class="fas fa-fire logo-icon"></i>
+      Ablaze Academy
+    </h1>
+    <nav>
+      <a href="index.HTML"><i class="fas fa-home"></i> Accueil</a>
+      <a href="affichecours.html"><i class="fas fa-book"></i> Cours</a>
+      <a href="#"><i class="fas fa-info-circle"></i> À propos</a>
+      <a href="#"><i class="fas fa-phone"></i> Contact</a>
+    </nav>
+  </header>
+
+  <button class="back-btn" onclick="window.history.back()">
+    <i class="fas fa-arrow-left"></i>
+    Retour
+  </button>
+
+  <div class="particles" id="particles"></div>
+
+  <section class="main-section">
+    <h1 class="page-title">
+      <i class="fas fa-graduation-cap"></i>
+      Catalogue des Micro-Cours
+    </h1>
+
+    <div class="stats-section">
+      <div class="stat-item">
+        <i class="fas fa-book-open"></i>
+        <span id="coursCount">0</span> cours disponibles
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-users"></i>
+        Communauté active
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-star"></i>
+        Qualité garantie
+      </div>
+    </div>
+
+    <div class="loading-container" id="loadingContainer">
+      <div class="loading-spinner"></div>
+      <span>Chargement des cours...</span>
+    </div>
+
+    <div class="cours-container" id="coursList" style="display: none;"></div>
+
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <i class="fas fa-book-open"></i>
+      <h3>Aucun cours disponible</h3>
+      <p>Soyez le premier à créer un micro-cours et partager vos connaissances !</p>
+    </div>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC64fe58iHaCTwlxpB7Us3sVkffa8iUIwI",
+      authDomain: "cours122.firebaseapp.com",
+      projectId: "cours122",
+      storageBucket: "cours122.appspot.com",
+      messagingSenderId: "497993111434",
+      appId: "1:497993111434:web:ed73d6e5f934ee7a4e1a73",
+      measurementId: "G-H6DLLFPGJT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const coursList = document.getElementById("coursList");
+    const loadingContainer = document.getElementById("loadingContainer");
+    const emptyState = document.getElementById("emptyState");
+    const coursCount = document.getElementById("coursCount");
+
+    // Fonction pour obtenir la classe CSS du niveau
+    function getNiveauClass(niveau) {
+      switch(niveau.toLowerCase()) {
+        case 'débutant': return 'niveau-debutant';
+        case 'intermédiaire': return 'niveau-intermediaire';
+        case 'avancé': return 'niveau-avance';
+        default: return 'niveau-debutant';
+      }
+    }
+
+    // Fonction pour obtenir l'emoji du niveau
+    function getNiveauEmoji(niveau) {
+      switch(niveau.toLowerCase()) {
+        case 'débutant': return '🟢';
+        case 'intermédiaire': return '🟡';
+        case 'avancé': return '🔴';
+        default: return '🟢';
+      }
+    }
+
+    // Fonction pour formater la date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    // Fonction pour tronquer le texte
+    function truncateText(text, maxLength) {
+      if (text.length <= maxLength) return text;
+      return text.substr(0, maxLength) + '...';
+    }
+
+    // Fonction principale pour charger les cours
+    async function chargerCours() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "cours"));
+        const coursArray = [];
+
+        querySnapshot.forEach((doc) => {
+          coursArray.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Cacher le loading
+        loadingContainer.style.display = 'none';
+
+        if (coursArray.length === 0) {
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        // Afficher le container des cours
+        coursList.style.display = 'grid';
+        coursCount.textContent = coursArray.length;
+
+        // Trier par date (plus récent en premier)
+        coursArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Créer les cards avec animation séquentielle
+        coursArray.forEach((data, index) => {
+          setTimeout(() => {
+            createCourseCard(data);
+          }, index * 100);
+        });
+
+      } catch (error) {
+        console.error("Erreur lors du chargement des cours:", error);
+        loadingContainer.innerHTML = `
+          <i class="fas fa-exclamation-triangle" style="color: #ff6b35; font-size: 2rem; margin-right: 15px;"></i>
+          <span>Erreur lors du chargement des cours</span>
+        `;
+      }
+    }
+
+    // Fonction pour créer une card de cours
+    function createCourseCard(data) {
+      const titre = encodeURIComponent(data.titre);
+      const imageUrl = `https://source.unsplash.com/400x300/?${titre},education,learning`;
+      
+      const card = document.createElement("div");
+      card.className = "card";
+      
+      card.innerHTML = `
+        <div class="niveau-badge ${getNiveauClass(data.niveau)}">
+          ${getNiveauEmoji(data.niveau)} ${data.niveau}
+        </div>
+        
+        <img class="cours-img" src="${imageUrl}" alt="${data.titre}" onerror="this.src='https://source.unsplash.com/400x300/?education,book,learning'">
+        
+        <div class="card-content">
+          <h3>${data.titre}</h3>
+          
+          <div class="card-info">
+            <i class="fas fa-align-left"></i>
+            <div>
+              <strong>Description :</strong>
+              ${truncateText(data.description, 150)}
+            </div>
+          </div>
+          
+          <div class="card-info">
+            <i class="fas fa-user-tie"></i>
+            <div>
+              <strong>Formateur :</strong>
+              ${data.formateur}
+            </div>
+          </div>
+          
+          <div class="card-info">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <strong>Ajouté le :</strong>
+              ${data.date ? formatDate(data.date) : 'Date non disponible'}
+            </div>
+          </div>
+          
+          <button class="btn-inscription" onclick="window.location.href='login.html?titre=${encodeURIComponent(data.titre)}'">
+            <i class="fas fa-rocket"></i>
+            S'inscrire maintenant
+          </button>
+        </div>
+      `;
+      
+      coursList.appendChild(card);
+      
+      // Animation d'apparition
+      setTimeout(() => {
+        card.classList.add('animate');
+      }, 50);
+    }
+
+    // Header scroll effect
+    function updateHeader() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+
+    // Créer des particules
+    function createParticles() {
+      const particles = document.getElementById('particles');
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.width = particle.style.height = Math.random() * 8 + 4 + 'px';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 8 + 12) + 's';
+        particles.appendChild(particle);
+      }
+    }
+
+    // Initialisation
+    window.addEventListener('scroll', updateHeader);
+    window.addEventListener('load', () => {
+      createParticles();
+    });
+
+    // Démarrer le chargement des cours
+    chargerCours();
+
+    // Animation d'entrée
+    setTimeout(() => {
+      document.body.style.opacity = '1';
+    }, 100);
+  </script>
+</body>
+</html>

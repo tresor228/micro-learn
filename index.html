@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard des Cours - Ablaze Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding-top: 80px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animations globales */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      animation: fadeInLeft 1s ease;
+    }
+
+    header.scrolled {
+      background: rgba(108, 46, 185, 0.95);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    header h1:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-icon {
+      margin-right: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 15px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    nav a:hover::before {
+      left: 100%;
+    }
+
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    /* Particules flottantes */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: floatParticle 15s infinite linear;
+    }
+
+    /* Contenu principal */
+    .main-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      position: relative;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(45deg, #fca311, #ff6b35);
+      border-radius: 2px;
+    }
+
+    /* Liste des cours */
+    .cours-list {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+      backdrop-filter: blur(5px);
+    }
+
+    .cours-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(108, 46, 185, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .cours-item:last-child {
+      border-bottom: none;
+    }
+
+    .cours-item:hover {
+      transform: translateX(10px);
+    }
+
+    .cours-info h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      color: #6c2eb9;
+    }
+
+    .cours-info p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .cours-info .description {
+      margin-top: 10px;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* Boutons d'action */
+    .actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .actions button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .edit-btn {
+      background: linear-gradient(45deg, #fca311, #ff6b35);
+      color: white;
+    }
+
+    .delete-btn {
+      background: linear-gradient(45deg, #e63946, #ff6b6b);
+      color: white;
+    }
+
+    .edit-btn:hover, .delete-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    /* Formulaire d'édition */
+    #editForm {
+      display: none;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      margin: 40px auto;
+      max-width: 800px;
+      animation: fadeInUp 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    #editForm h2 {
+      color: #6c2eb9;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #6c2eb9;
+      font-weight: 500;
+    }
+
+    #editForm input, 
+    #editForm textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid rgba(108, 46, 185, 0.2);
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    #editForm input:focus, 
+    #editForm textarea:focus {
+      border-color: #6c2eb9;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(108, 46, 185, 0.1);
+    }
+
+    #editForm textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    #editForm button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .save-btn {
+      background: linear-gradient(45deg, #6c2eb9, #9c27b0);
+      color: white;
+    }
+
+    .cancel-btn {
+      background: white;
+      color: #6c2eb9;
+      border: 2px solid #6c2eb9;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(108, 46, 185, 0.3);
+    }
+
+    .cancel-btn:hover {
+      background: #f8f3fc;
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(45deg, #2d1b69, #6c2eb9);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #fca311, transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(108, 46, 185, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      gap: 15px;
+    }
+
+    .mobile-menu.active {
+      display: flex;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+      
+      nav {
+        display: none;
+      }
+      
+      .menu-toggle {
+        display: block;
+      }
+      
+      .cours-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      
+      .cours-list, #editForm {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .actions button {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .form-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <header id="header">
+    <h1>
+      <i data-lucide="flame" class="logo-icon"></i>
+      Ablaze Academy
+    </h1>
+    <nav id="nav">
+      <a href="index.HTML"><i class="fas fa-home"></i> Accueil</a>
+      <a href="affichecours.html"><i class="fas fa-book"></i> Cours</a>
+      <a href="index.html#apropos"><i class="fas fa-info-circle"></i> À propos</a>
+      <a href="index.html#contact"><i class="fas fa-phone"></i> Contact</a>
+    </nav>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.HTML"><i class="fas fa-home"></i> Accueil</a>
+      <a href="affichecours.html"><i class="fas fa-book"></i> Cours</a>
+      <a href="index.html#apropos"><i class="fas fa-info-circle"></i> À propos</a>
+      <a href="index.html#contact"><i class="fas fa-phone"></i> Contact</a>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <h1>Dashboard - Liste des Cours</h1>
+    
+    <div class="cours-list" id="coursList">
+      <!-- Les cours seront ajoutés dynamiquement ici -->
+    </div>
+
+    <form id="editForm">
+      <h2>Modifier le Cours</h2>
+      
+      <div class="form-group">
+        <label for="editTitre">Titre du cours</label>
+        <input type="text" id="editTitre" placeholder="Entrez le titre du cours">
+      </div>
+      
+      <div class="form-group">
+        <label for="editFormateur">Formateur</label>
+        <input type="text" id="editFormateur" placeholder="Nom du formateur">
+      </div>
+      
+      <div class="form-group">
+        <label for="editNiveau">Niveau</label>
+        <input type="text" id="editNiveau" placeholder="Niveau de difficulté">
+      </div>
+      
+      <div class="form-group">
+        <label for="editDescription">Description</label>
+        <textarea id="editDescription" placeholder="Description détaillée du cours"></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="save-btn" onclick="sauvegarderModification()">
+          <i class="fas fa-save"></i> Mettre à jour
+        </button>
+        <button type="button" class="cancel-btn" onclick="document.getElementById('editForm').style.display = 'none'">
+          <i class="fas fa-times"></i> Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Ablaze Academy - Micro-Cours Étudiants. Tous droits réservés.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC64fe58iHaCTwlxpB7Us3sVkffa8iUIwI",
+      authDomain: "cours122.firebaseapp.com",
+      projectId: "cours122",
+      storageBucket: "cours122.appspot.com",
+      messagingSenderId: "497993111434",
+      appId: "1:497993111434:web:ed73d6e5f934ee7a4e1a73"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const coursList = document.getElementById("coursList");
+    const editForm = document.getElementById("editForm");
+    let coursIDActuel = "";
+
+    // Fonction pour créer des particules flottantes
+    function createParticles() {
+      const particles = document.getElementById('particles');
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.width = particle.style.height = Math.random() * 10 + 5 + 'px';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particles.appendChild(particle);
+      }
+    }
+
+    async function afficherCours() {
+      coursList.innerHTML = "";
+      const snapshot = await getDocs(collection(db, "cours"));
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const id = docSnap.id;
+
+        const item = document.createElement("div");
+        item.className = "cours-item";
+
+        item.innerHTML = `
+          <div class="cours-info">
+            <h3>${data.titre}</h3>
+            <p>${data.formateur} - ${data.niveau}</p>
+            ${data.description ? `<p class="description">${data.description}</p>` : ''}
+          </div>
+          <div class="actions">
+            <button class="edit-btn" onclick="modifierCours('${id}')">
+              <i class='fas fa-edit'></i>Modifier
+            </button>
+            <button class="delete-btn" onclick="supprimerCours('${id}')">
+              <i class='fas fa-trash'></i>Supprimer
+            </button>
+          </div>
+        `;
+
+        coursList.appendChild(item);
+      });
+    }
+
+    window.supprimerCours = async function(id) {
+      if (confirm("Voulez-vous vraiment supprimer ce cours ?")) {
+        await deleteDoc(doc(db, "cours", id));
+        afficherCours();
+      }
+    }
+
+    window.modifierCours = async function(id) {
+      const docRef = doc(db, "cours", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById("editTitre").value = data.titre;
+        document.getElementById("editFormateur").value = data.formateur;
+        document.getElementById("editNiveau").value = data.niveau;
+        document.getElementById("editDescription").value = data.description || '';
+        coursIDActuel = id;
+        editForm.style.display = "block";
+        window.scrollTo({ top: editForm.offsetTop, behavior: 'smooth' });
+      }
+    }
+
+    window.sauvegarderModification = async function() {
+      const docRef = doc(db, "cours", coursIDActuel);
+      await updateDoc(docRef, {
+        titre: document.getElementById("editTitre").value,
+        formateur: document.getElementById("editFormateur").value,
+        niveau: document.getElementById("editNiveau").value,
+        description: document.getElementById("editDescription").value
+      });
+      alert("Cours mis à jour avec succès !");
+      editForm.style.display = "none";
+      afficherCours();
+    }
+
+    // Fonctions pour le header et le menu mobile
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('active');
+    }
+
+    function updateHeader() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+
+    // Fermer le menu mobile quand on clique sur un lien
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.remove('active');
+      });
+    });
+
+    // Fermer le menu mobile si on clique ailleurs
+    document.addEventListener('click', (e) => {
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuToggle = document.querySelector('.menu-toggle');
+      
+      if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+
+    // Initialisation
+    window.addEventListener('scroll', updateHeader);
+    window.addEventListener('load', () => {
+      createParticles();
+      afficherCours();
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>
